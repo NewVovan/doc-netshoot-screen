@@ -5,6 +5,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  IMAGE_NAME: netshoot-screen
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +15,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
+    - name: Set up Docker tags
+      id: vars
+      run: |
+        echo "REPO=${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}" >> $GITHUB_ENV
+        echo "TAG_LATEST=latest" >> $GITHUB_ENV
+        echo "TAG_COMMIT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        echo "TAG_VERSION=v1.0.0" >> $GITHUB_ENV  # можно заменить на динамическую версию
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
@@ -24,4 +35,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: NewVovan/netshoot-screen:latest
+        tags: |
+          ${{ env.REPO }}:${{ env.TAG_LATEST }}
+          ${{ env.REPO }}:${{ env.TAG_COMMIT }}
+          ${{ env.REPO }}:${{ env.TAG_VERSION }}
