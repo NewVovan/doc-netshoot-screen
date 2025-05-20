@@ -8,3 +8,7 @@ This project builds a Docker image based on `nicolaka/netshoot` with the `screen
 
 ```bash
 docker build -t NewVovan/netshoot-screen .
+
+docker run -it your_dockerhub_username/netshoot-screen
+
+docker run -it your_dockerhub_username/netshoot-screen bash
